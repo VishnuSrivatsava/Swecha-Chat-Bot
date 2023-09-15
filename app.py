@@ -41,7 +41,7 @@ def starchat(model,myprompt, your_template):
     prompt = PromptTemplate(template=template, input_variables=["myprompt"])
     llm_chain = LLMChain(prompt=prompt, llm=llm)
     llm_reply = llm_chain.run(myprompt)
-    reply = llm_reply.partition('<|end|>')[0]
+    reply = llm_reply.partition('')[0]
     return reply
 
 
@@ -50,13 +50,14 @@ if "messages" not in st.session_state:
 
 for message in st.session_state.messages:
     if message["role"] == "user":
-        with st.chat_message(message["role"],avatar=av_us):
+        with st.chat_message(message["role"], avatar=av_us):
             st.markdown(message["content"])
     else:
-        with st.chat_message(message["role"],avatar=av_ass):
+        with st.chat_message(message["role"], avatar=av_ass):
             st.markdown(message["content"])
 
-if myprompt := st.chat_input("What is an AI model?"):
+myprompt = st.chat_input("What is an AI model?")
+if myprompt:
     st.session_state.messages.append({"role": "user", "content": myprompt})
     with st.chat_message("user", avatar=av_us):
         st.markdown(myprompt)
@@ -67,7 +68,7 @@ if myprompt := st.chat_input("What is an AI model?"):
         full_response = ""
         res  =  starchat(
                 st.session_state["hf_model"],
-                myprompt, "<|system|>\n<|end|>\n<|user|>\n{myprompt}<|end|>\n<|assistant|>")
+                myprompt, "\n\n\n{myprompt}\n")
         response = res.split(" ")
         for r in response:
             full_response = full_response + r + " "
@@ -77,3 +78,4 @@ if myprompt := st.chat_input("What is an AI model?"):
         asstext = f"assistant: {full_response}"
         writehistory(asstext)       
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+
