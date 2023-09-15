@@ -16,8 +16,8 @@ av_us = 'images/man.png'
 av_ass = 'images/robot.png'
 
 # Open and resize the images
-av_us = Image.open(av_us).resize((100, 100))
-av_ass = Image.open(av_ass).resize((100, 100))
+av_us = Image.open(av_us).resize((1, 1))
+av_ass = Image.open(av_ass).resize((1, 1))
 
 st.title("Swecha Chat Bot")
 st.subheader("using Starchat-beta")
