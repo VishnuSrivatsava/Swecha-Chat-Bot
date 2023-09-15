@@ -4,6 +4,7 @@ from langchain import HuggingFaceHub
 import requests
 import os
 from time import sleep
+from PIL import Image
 
 from dotenv import load_dotenv
 load_dotenv()
