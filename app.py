@@ -4,14 +4,20 @@ from langchain import HuggingFaceHub
 import requests
 import os
 from time import sleep
+from PIL import Image
 
 from dotenv import load_dotenv
 load_dotenv()
 
 yourHFtoken = os.getenv("YOUR_HF_TOKEN")
 
+# Update image paths to use the "images" folder
 av_us = 'images/man.png'
 av_ass = 'images/robot.png'
+
+# Open and resize the images
+av_us = Image.open(av_us).resize((100, 100))
+av_ass = Image.open(av_ass).resize((100, 100))
 
 st.title("Swecha Chat Bot")
 st.subheader("using Starchat-beta")
@@ -34,6 +40,11 @@ def starchat(model,myprompt, your_template):
     reply = llm_reply.partition('')[0]
     return reply
 
+# Define the writehistory function
+def writehistory(text):
+    with open('chathistory.txt', 'a') as f:
+        f.write(text)
+        f.write('\n')
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
