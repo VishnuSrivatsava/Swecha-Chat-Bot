@@ -19,6 +19,7 @@ def writehistory(text):
         f.write('\n')
     f.close()
 
+yourHFtoken = "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"
 repo="HuggingFaceH4/starchat-beta"
 
 st.title("Swecha Chat Bot")
