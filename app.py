@@ -10,8 +10,8 @@ load_dotenv()
 
 yourHFtoken = os.getenv("YOUR_HF_TOKEN")
 
-av_us = os.path.abspath('images/man.png')
-av_ass = os.path.abspath('images/robot.png')
+av_us = Image.open('images/man.png')
+av_ass = Image.open('images/robot.png')
 
 def writehistory(text):
     with open('chathistory.txt', 'a') as f:
