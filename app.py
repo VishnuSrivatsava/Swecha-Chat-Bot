@@ -4,15 +4,14 @@ from langchain import HuggingFaceHub
 import requests
 import os
 from time import sleep
-from PIL import Image
 
 from dotenv import load_dotenv
 load_dotenv()
 
 yourHFtoken = os.getenv("YOUR_HF_TOKEN")
 
-av_us = Image.open('images/man.png')
-av_ass = Image.open('images/robot.png')
+av_us = './man.png'
+av_ass = './robot.png'
 
 def writehistory(text):
     with open('chathistory.txt', 'a') as f:
@@ -41,7 +40,7 @@ def starchat(model,myprompt, your_template):
     prompt = PromptTemplate(template=template, input_variables=["myprompt"])
     llm_chain = LLMChain(prompt=prompt, llm=llm)
     llm_reply = llm_chain.run(myprompt)
-    reply = llm_reply.partition('')[0]
+    reply = llm_reply.partition('<|end|>')[0]
     return reply
 
 
@@ -50,14 +49,13 @@ if "messages" not in st.session_state:
 
 for message in st.session_state.messages:
     if message["role"] == "user":
-        with st.chat_message(message["role"], avatar=av_us):
+        with st.chat_message(message["role"],avatar=av_us):
             st.markdown(message["content"])
     else:
-        with st.chat_message(message["role"], avatar=av_ass):
+        with st.chat_message(message["role"],avatar=av_ass):
             st.markdown(message["content"])
 
-myprompt = st.chat_input("What is an AI model?")
-if myprompt:
+if myprompt := st.chat_input("What is an AI model?"):
     st.session_state.messages.append({"role": "user", "content": myprompt})
     with st.chat_message("user", avatar=av_us):
         st.markdown(myprompt)
@@ -68,7 +66,7 @@ if myprompt:
         full_response = ""
         res  =  starchat(
                 st.session_state["hf_model"],
-                myprompt, "\n\n\n{myprompt}\n")
+                myprompt, "<|system|>\n<|end|>\n<|user|>\n{myprompt}<|end|>\n<|assistant|>")
         response = res.split(" ")
         for r in response:
             full_response = full_response + r + " "
@@ -78,4 +76,3 @@ if myprompt:
         asstext = f"assistant: {full_response}"
         writehistory(asstext)       
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
